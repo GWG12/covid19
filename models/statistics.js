@@ -53,4 +53,15 @@ export class Statistics {
         }
     }
 
+    static async getCountry(id) {
+        const db = getDb();
+        try {
+            const result = await db.collection('statistics')
+                .findOne({ _id: id });
+            return result;
+        } catch (err) {
+            console.log('error');
+        }
+    }
+
 }
