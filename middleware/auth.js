@@ -31,7 +31,8 @@ export const authMiddleware = (req, res, next) => {
   }
   // Check whether refreshToken in cookie is still valid and whether userId from refreshToken in cookie equals userId from incoming accessToken
   if (!req.headers.cookie || !req.headers.cookie.split('=')[1]) {
-    error.statusCode = 403;
+    const error = new Error('Unauthorized');
+    error.statusCode = 401;
     return next(error);
   }
   let decodedRefreshToken;

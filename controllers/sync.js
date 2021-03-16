@@ -27,12 +27,8 @@ export const sync = async (req, res, next) => {
         error.statusCode = 500;
         return next(error);
     }
-    const { message, error } = await Statistics.syncDatabase(jsonData.response)
-    if (error) {
-        const err = new Error(error);
-        err.statusCode = 500;
-        return next(err);
-    }
-    return res.status(200).json({ message: message });
+    const { data, error } = await Statistics.syncDatabase(jsonData.response);
+    if (error) return next(error);
+    return res.status(200).json(data);
 }
 

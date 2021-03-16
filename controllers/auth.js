@@ -62,7 +62,7 @@ export const signup = async (req, res, next) => {
         return next(error);
     }
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
-    return res.status(201).json({ userId: user.id, accesToken: token });
+    return res.status(201).json({ userId: user.id, accessToken: token });
 }
 
 export const login = async (req, res, next) => {
@@ -113,5 +113,5 @@ export const login = async (req, res, next) => {
         return next(error);
     }
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
-    return res.status(200).json({ userId: userId, accesToken: token });
+    return res.status(200).json({ userId: userId, accessToken: token });
 }

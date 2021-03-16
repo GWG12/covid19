@@ -7,14 +7,13 @@ const MongoClient = mongodb.MongoClient;
 let _db;
 
 export const mongoConnect = async callback => {
-    console.log('adentro papaw')
     const URI = process.env.MONGODB_URI;
     try {
         const client = await MongoClient.connect(URI, { useUnifiedTopology: true });
         _db = client.db();
         callback();
     } catch (err) {
-        console.log(err);
+        return;
     }
 };
 

@@ -12,9 +12,9 @@ export class Token {
         const db = getDb();
         try {
             const result = await db.collection('tokens').insertOne(this);
-            return result;
+            return { data: result };
         } catch (err) {
-            console.log('error');
+            return { error: { message: 'Server error' } };
         }
     }
 
@@ -23,9 +23,9 @@ export class Token {
         try {
             const result = await db.collection('tokens')
                 .findOne({ userId: userId, refreshToken: jti }, { _id: 0, refreshToken: 1 });
-            return result;
+            return { data: result };
         } catch (err) {
-            console.log('error');
+            return { error: { message: 'Server error' } };
         }
     }
 
@@ -39,9 +39,9 @@ export class Token {
                             refreshToken: newToken
                         }
                     });
-            return result;
+            return { data: result };
         } catch (err) {
-            console.log('error')
+            return { error: { message: 'Server error' } };
         }
     }
 
@@ -55,9 +55,9 @@ export class Token {
                             refreshToken: null
                         }
                     });
-            return result;
+            return { data: result };
         } catch (err) {
-            console.log('error')
+            return { error: { message: 'Server error' } };
         }
     }
 

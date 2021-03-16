@@ -34,13 +34,14 @@ export const revoke = async (req, res, next) => {
         return next(error);
     }
     const userId = new mongoDb.ObjectId(req.body.userId);
-    const isRevokedToken = await Token.revokeRefreshToken(userId);
-    if (isRevokedToken.matchedCount === 0) {
+    const { data, error } = await Token.revokeRefreshToken(userId);
+    if (error) return next(error);
+    if (data.matchedCount === 0) {
         const error = new Error("User not found")
         error.statusCode = 404;
         return next(error);
     }
-    if (isRevokedToken.modifiedCount === 0) {
+    if (data.modifiedCount === 0) {
         const error = new Error("Server error")
         error.statusCode = 409;
         return next(error);

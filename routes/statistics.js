@@ -8,6 +8,7 @@ const router = express.Router();
 
 // Routes
 router.get('', authMiddleware, statisticsController.getAllCountries);
+router.get('/continents', authMiddleware, statisticsController.getContinents);
 router.get('/:countryId', authMiddleware, statisticsController.getCountry);
 
 

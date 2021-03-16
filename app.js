@@ -22,9 +22,10 @@ app.use(bodyParser.json());
 //app.use('/images',express.static(path.join(__dirname,'images')));
 
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, HEAD');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -56,7 +57,7 @@ function getErrorsJoi(item) {
 
 // MongoDB Atlas connection
 mongoConnect(() => {
-    app.listen(6000, () => {
+    app.listen(8000, () => {
         console.log('server started')
     });
 });

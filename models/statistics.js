@@ -14,9 +14,9 @@ export class Statistics {
             console.log('no hay nada')
             try {
                 await db.collection('statistics').insertMany(data);
-                return { message: 'Database successfully synced!' };
+                return { data: { message: 'Database successfully synced!' } };
             } catch (err) {
-                return { error: 'Could not sync data, please try again later' };
+                return { error: { message: 'Could not sync data, please try again later' } };
             }
         }
         try {
@@ -29,7 +29,7 @@ export class Statistics {
                 // If inserting operation failed, keep old collection and rename it back to
                 // statistics
                 await db.collection('statistics1').rename('statistics');
-                return { error: 'Could not sync data, please try again later' };
+                return { error: { message: 'Could not sync data, please try again later' } };
             }
             // Step 3: If inserting was successful, drop renamed original collection and
             // keep new synced collection under the name of "statistics" that "overwrote" the original collection
@@ -37,9 +37,9 @@ export class Statistics {
             while (!droppedOriginalCollection) {
                 droppedOriginalCollection = await db.collection('statistics1').drop();
             }
-            return { message: 'Database successfully synced!' };
+            return { data: { message: 'Database successfully synced!' } };
         } catch (err) {
-            return { error: 'Could not sync data, please try again later' };
+            return { error: { message: 'Could not sync data, please try again later' } };
         }
     }
 
@@ -49,7 +49,42 @@ export class Statistics {
             const result = await db.collection('statistics').find().toArray();
             return result;
         } catch (err) {
-            return null;
+            return;
+        }
+    }
+
+    static async getStatsByContinent() {
+        const db = getDb();
+        try {
+            const result = await db.collection('statistics')
+                .aggregate([
+                    {
+                        $project: {
+                            _id: 0,
+                            continent: { $ifNull: ["$continent", "NA"] },
+                            population: { $ifNull: ["$population", 0] },
+                            activeCases: { $ifNull: ["$cases.active", 0] },
+                            criticalCases: { $ifNull: ["$cases.critical", 0] },
+                            recoveredCases: { $ifNull: ["$cases.recovered", 0] },
+                            deaths: { $ifNull: ["$deaths.total", 0] },
+                            tests: { $ifNull: ["$tests.total", 0] }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$continent",
+                            population: { $sum: "$population" },
+                            activeCases: { $sum: "$activeCases" },
+                            criticalCases: { $sum: "$criticalCases" },
+                            recoveredCases: { $sum: "$recoveredCases" },
+                            deaths: { $sum: "$deaths" },
+                            tests: { $sum: "$tests" }
+                        }
+                    }
+                ]).toArray();
+            return result;
+        } catch (err) {
+            return;
         }
     }
 
@@ -60,7 +95,7 @@ export class Statistics {
                 .findOne({ _id: id });
             return result;
         } catch (err) {
-            console.log('error');
+            return;
         }
     }
 
