@@ -8,11 +8,9 @@ export const genRefreshToken = async (userId, currRefreshToken) => {
     let decodedToken;
     try {
         decodedToken = jwt.verify(currRefreshToken, process.env.REFRESH_TOKEN_SECRET);
-        console.log('wigb')
     } catch (err) {
         const error = new Error("Not authorized");
         error.statusCode = 403;
-        console.log('error 1 ', error)
         return { error: error };
     }
     if (!decodedToken) {
@@ -20,9 +18,7 @@ export const genRefreshToken = async (userId, currRefreshToken) => {
         error.statusCode = 401;
         return { error: error };
     }
-    console.log('token decodificado ', decodedToken)
     const refreshToken = await Token.getRefreshToken(userId, decodedToken.jti);
-    console.log('found token ', refreshToken)
     if (!refreshToken) {
         const error = new Error("Not authorized");
         error.statusCode = 403;

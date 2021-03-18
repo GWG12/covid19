@@ -10,12 +10,10 @@ export const authMiddleware = (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
   let decodedAccessToken;
-  console.log('el access token ', token);
   try {
     decodedAccessToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   } catch (err) {
     if (err.message = 'jwt expired') {
-      console.log('expires')
       const error = new Error('Unauthorized');
       error.statusCode = 403;
       return next(error);
@@ -36,17 +34,13 @@ export const authMiddleware = (req, res, next) => {
     return next(error);
   }
   let decodedRefreshToken;
-  console.log('el tojen de refresh ', req.headers.cookie.split('=')[1])
   try {
     decodedRefreshToken = jwt.verify(req.headers.cookie.split('=')[1], process.env.REFRESH_TOKEN_SECRET);
   } catch (error) {
-    console.log('previo a ')
-    console.log(error)
     error.statusCode = 500;
     return next(error);
   }
   if (decodedAccessToken.id !== decodedRefreshToken.id) {
-    console.log('unequal')
     const error = new Error('Unauthorized');
     error.statusCode = 401;
     return next(error);

@@ -11,7 +11,6 @@ export class Statistics {
         const collections = await db.listCollections().toArray();
         const collectionNames = collections.map(elem => elem.name);
         if (!collectionNames.includes('statistics')) {
-            console.log('no hay nada')
             try {
                 await db.collection('statistics').insertMany(data);
                 return { data: { message: 'Database successfully synced!' } };
@@ -47,6 +46,23 @@ export class Statistics {
         const db = getDb();
         try {
             const result = await db.collection('statistics').find().toArray();
+            return result;
+        } catch (err) {
+            return;
+        }
+    }
+
+    static async getAllCountriesList() {
+        const db = getDb();
+        try {
+            const result = await db.collection('statistics')
+                .aggregate([
+                    {
+                        $project: {
+                            country: 1
+                        }
+                    }
+                ]).toArray();
             return result;
         } catch (err) {
             return;
@@ -93,6 +109,17 @@ export class Statistics {
         try {
             const result = await db.collection('statistics')
                 .findOne({ _id: id });
+            return result;
+        } catch (err) {
+            return;
+        }
+    }
+
+    static async postCountry(queryObject, updateObject) {
+        const db = getDb();
+        try {
+            const result = await db.collection('statistics')
+                .updateOne(queryObject, [{ $set: updateObject }]);
             return result;
         } catch (err) {
             return;

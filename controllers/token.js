@@ -9,22 +9,21 @@ import mongoDb from 'mongodb';
 export const refresh = async (req, res, next) => {
     if (!mongoDb.ObjectId.isValid(req.body.userId)) {
         const error = new Error("Invalid user");
-        error.statusCode = 403;
+        error.statusCode = 404;
         return next(error);
     }
     const userId = new mongoDb.ObjectId(req.body.userId);
-    console.log('cookies ', req.headers.cookie)
+
     if (!req.headers.cookie || !req.headers.cookie.split('=')[1]) {
         const error = new Error("Invalid credentials");
-        error.statusCode = 403;
+        error.statusCode = 404;
         return next(error);
     }
     const token = req.headers.cookie.split('=')[1];
-    console.log('el token ', req.headers.cookie.split('=')[1])
     const { accessToken, refreshToken, error } = await genRefreshToken(userId, token);
     if (error) return next(error);
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
-    return res.status(200).json({ accesToken: accessToken });
+    return res.status(200).json({ accessToken: accessToken });
 }
 
 export const revoke = async (req, res, next) => {
@@ -43,7 +42,7 @@ export const revoke = async (req, res, next) => {
     }
     if (data.modifiedCount === 0) {
         const error = new Error("Server error")
-        error.statusCode = 409;
+        error.statusCode = 500;
         return next(error);
     }
     return res.status(204).json();

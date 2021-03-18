@@ -36,10 +36,6 @@ app.use('/sync', syncRoutes);
 app.use('/statistics', statisticsRoutes);
 
 app.use((error, req, res, next) => {
-    console.log('En error middleware')
-    console.log(error.message)
-    console.log(error.status)
-    console.log("Fin del middleware")
     let message;
     const status = error.statusCode || 500;
     if (error.details) {
@@ -57,8 +53,8 @@ function getErrorsJoi(item) {
 
 // MongoDB Atlas connection
 mongoConnect(() => {
-    app.listen(8000, () => {
-        console.log('server started')
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`server started at ${process.env.PORT}`)
     });
 });
 

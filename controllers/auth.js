@@ -80,7 +80,7 @@ export const login = async (req, res, next) => {
     const isEqual = await bcrypt.compare(req.body.password, user.password);
     if (!isEqual) {
         const error = new Error('User not found');
-        error.statusCode = 409;
+        error.statusCode = 404;
         return next(error);
     }
     const userId = user._id;
@@ -109,7 +109,7 @@ export const login = async (req, res, next) => {
     }
     if (isReplacedToken.modifiedCount === 0) {
         const error = new Error("Server error")
-        error.statusCode = 409;
+        error.statusCode = 500;
         return next(error);
     }
     res.cookie('refreshToken', refreshToken, { httpOnly: true })
