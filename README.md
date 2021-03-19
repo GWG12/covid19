@@ -61,4 +61,5 @@ npm start
 Done!
 
 ###### NOTE*
+Make sure to run the app on port 8000, otherwise it won't be able to communicate with the covid-19 frontend client.
 Please feel free to contact me in case of any doubts.
