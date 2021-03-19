@@ -118,10 +118,11 @@ export class Statistics {
     static async postCountry(queryObject, updateObject) {
         const db = getDb();
         try {
-            const result = await db.collection('statistics')
-                .updateOne(queryObject, [{ $set: updateObject }]);
+            const result = await db.collection('statistics').findOneAndUpdate(queryObject, [{ $set: updateObject }], { returnOriginal: false });
+            console.log('la respuesta ahaajha ', result)
             return result;
         } catch (err) {
+            console.log('error reoepo ', err)
             return;
         }
     }

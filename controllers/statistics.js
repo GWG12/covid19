@@ -106,17 +106,12 @@ export const updateCountry = async (req, res, next) => {
     }, {});
     try {
         const data = await Statistics.postCountry(queryObject, updateObject);
-        if (data.matchedCount === 0) {
+        if (!data) {
             const error = new Error("Country not found")
             error.statusCode = 404;
             return next(error);
         }
-        if (data.modifiedCount === 0) {
-            const error = new Error("Could not update, please try again")
-            error.statusCode = 400;
-            return next(error);
-        }
-        return res.status(204).json();
+        return res.status(200).json(data.value);
     } catch (err) {
         err.message = 'Server error'
         err.statusCode = 500;

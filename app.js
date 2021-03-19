@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path';
 import bodyParser from 'body-parser';
 import { mongoConnect } from './util/database.js';
 import dotenv from 'dotenv';
@@ -35,6 +34,7 @@ app.use('/token', tokenRoutes);
 app.use('/sync', syncRoutes);
 app.use('/statistics', statisticsRoutes);
 
+// Errors
 app.use((error, req, res, next) => {
     let message;
     const status = error.statusCode || 500;
@@ -51,10 +51,12 @@ function getErrorsJoi(item) {
     return item.message
 }
 
+const PORT = process.env.PORT || 8000;
+
 // MongoDB Atlas connection
 mongoConnect(() => {
-    app.listen(process.env.PORT || 8000, () => {
-        console.log(`server started at ${process.env.PORT}`)
+    app.listen(PORT, () => {
+        console.log(`server started at ${PORT}`)
     });
 });
 

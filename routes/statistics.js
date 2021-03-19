@@ -9,7 +9,7 @@ const router = express.Router();
 // Routes
 router.get('', authMiddleware, statisticsController.getAllCountries);
 router.get('/continents', authMiddleware, statisticsController.getContinents);
-router.get('/countries', statisticsController.getAllCountriesList);
+router.get('/countries', authMiddleware, statisticsController.getAllCountriesList);
 router.get('/:countryId', authMiddleware, statisticsController.getCountry);
 router.post('/:countryId', authMiddleware, statisticsController.updateCountry);
 

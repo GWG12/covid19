@@ -13,7 +13,7 @@ export const authMiddleware = (req, res, next) => {
   try {
     decodedAccessToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   } catch (err) {
-    if (err.message = 'jwt expired') {
+    if (err.message === 'jwt expired') {
       const error = new Error('Unauthorized');
       error.statusCode = 403;
       return next(error);
@@ -23,7 +23,7 @@ export const authMiddleware = (req, res, next) => {
     return next(error);
   }
   if (!decodedAccessToken) {
-    const error = new Error('Unauthorized');
+    const error = new Error('not decoded');
     error.statusCode = 401;
     return next(error);
   }
